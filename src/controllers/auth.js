@@ -5,6 +5,13 @@ const User = require('../models/User')
 
 exports.signUp = async (user, password, res) => {
     const checkPassowrd = await bcrypt.compare(password, user.password)
+    const info = {
+        id: user._id,
+        name: user.name,
+        email: user.email
+
+    }
+
     if(!checkPassowrd){
         return res.status(422).json({ msg: 'Senha inválida' })
     }
@@ -17,16 +24,14 @@ exports.signUp = async (user, password, res) => {
         },
         secret,
         )
-        res.status(200).json({msg: 'Autenticação realizada com sucesso', token })
+        res.status(200).json({msg: 'Autenticação realizada com sucesso', info, token })
     } catch(err){
-        console.log(err)
         res.status(500).json({msg: 'Aconteceu um erro no servidor, tente novamente mais tarde!'})
     }
 }
 
 exports.registerUser = async (req, res) => {
     const { name, email, password } = req.body
-     // Colocando segurança na senha
      const salt = await bcrypt.genSalt(12)
      const passwordHash = await bcrypt.hash(password, salt)
  

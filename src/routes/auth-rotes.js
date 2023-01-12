@@ -3,6 +3,11 @@ const checkToken = require('../middleware/auth-jwt')
 const controllerAuth = require('../controllers/auth')
 
 module.exports = function(app) {
+    app.get("/auth/users", async (req, res) =>{
+        const user = await User.find({ }, '-password')
+        res.status(200).json({user})
+    })
+
     app.post("/auth/login", async (req, res) =>{
         const { email, password } = req.body
 
